@@ -1,19 +1,7 @@
-IyBCZWF2aWVzIFN1cmYgRm9yZWNhc3QKCiMjIEJhbHRpYyBTZWEgU3VyZiBD
-b25kaXRpb25zCgpBIHN1cmYgZm9yZWNhc3RpbmcgYXBwbGljYXRpb24gc3Bl
-Y2lmaWNhbGx5IGRlc2lnbmVkIGZvciB0aGUgQmFsdGljIFNlYSByZWdpb24u
-IFByb3ZpZGVzIHJlYWwtdGltZSB3YXZlIGNvbmRpdGlvbnMsIHdlYXRoZXIg
-ZGF0YSwgYW5kIHByZWRpY3RpdmUgYW5hbHl0aWNzIHRvIGhlbHAgc3VyZmVy
-cyBtYWtlIGluZm9ybWVkIGRlY2lzaW9ucy4KCiMjIEtleSBGZWF0dXJlcwoj
-LiMgTGl2ZSBEYXRhIEZlZWQKLSBSZWFsLXRpbWUgc3VyZiBjb25kaXRpb25z
-IGZyb20gbXVsdGlwbGUgZGF0YSBzb3VyY2VzCi0gV2F2ZSBoZWlnaHQsIHBl
-cmlvZCwgYW5kIGRpcmVjdGlvbiBtb25pdG9yaW5nCi0gV2luZCBzcGVlZCwg
-ZGlyZWN0aW9uLCBhbmQgZ3VzdCBpbmZvcm1hdGlvbgojLiMgRm9yZWNhc3Rp
-bmcgTW9kZWwKLSBBZHZhbmNlZCB3ZWF0aGVyIHByZWRpY3Rpb24gYWxnb3Jp
-dGhtcwotIE11bHRpLWRheSBzdXJmIGZvcmVjYXN0IHdpdGggaG91cmx5IGdy
-YW51bGFyaXR5Ci0gTWFjaGluZSBsZWFybmluZy1wb3dlcmVkIHdhdmUgY29u
-ZGl0aW9uIHByZWRpY3Rpb25zCgojIyBUZWNobm9sb2d5ClB5dGhvbiBiYWNr
-ZW5kIHdpdGggcmVhbC10aW1lIGRhdGEgcHJvY2Vzc2luZy4gRGVwbG95ZWQg
-b24gUmVuZGVyIChiYWNrZW5kKSBhbmQgR2l0SHViIFBhZ2VzIChmcm9udGVu
-ZCkuCgojIyBTdGF0dXMKQWN0aXZlIGRldmVsb3BtZW50LiBVc2VkIGZvciBw
-ZXJzb25hbCBzdXJmIHRyaXBzIGluIHRoZSBCYWx0aWMuCgoqIkJ1aWx0IGJ5
-IEpryZv28IENhbGRhcyB8IGpvYW9jY2FsZGFzQGdtYWlsLmNvbSIqKgo=
+# Beavies Surf Forecast
+
+FastAPI prototype for surf spots and forecasts. Weather and marine requests are sent to their respective Open-Meteo endpoints, validated and joined on UTC timestamps. Wind is explicitly requested in metres per second to match the scoring function. Missing hours remain null; zero swell is preserved. Responses include source, units, forecast type and retrieval timestamp.
+
+Run `uvicorn app:app` and inspect `/docs`. Tests: `python -m unittest discover -v`. The score is a heuristic, not a trained machine-learning prediction or a safety recommendation.
+
+Commercial blockers: authenticated users and ownership checks; a durable database instead of in-memory stores; validated preference ranges; cache/rate limits; forecast-quality backtesting; commercial provider terms and subscription configuration. No paid service readiness is claimed. Provider documentation: https://open-meteo.com/en/docs/marine-weather-api and https://open-meteo.com/en/docs .

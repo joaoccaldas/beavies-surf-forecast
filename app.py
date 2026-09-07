@@ -4,9 +4,10 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 import httpx
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import uuid
 import math
+import asyncio
 
 app = FastAPI(title="Beavies Surf Forecast API", version="0.1.0")
 
@@ -14,7 +15,7 @@ app = FastAPI(title="Beavies Surf Forecast API", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -29,8 +30,8 @@ USER_PREFS: Dict[str, Dict[str, Any]] = {}
 class Spot(BaseModel):
     id: Optional[str] = None
     name: str
-    latitude: float
-    longitude: float
+    latitude: float = Field(ge=-90, le=90)
+    longitude: float = Field(ge=-180, le=180)
     region: Optional[str] = None
     country: Optional[str] = None
     orientation: Optional[str] = Field(None, description="Cardinal orientation, e.g., W, SW")
@@ -38,8 +39,8 @@ class Spot(BaseModel):
 
 class CreateSpot(BaseModel):
     name: str
-    latitude: float
-    longitude: float
+    latitude: float = Field(ge=-90, le=90)
+    longitude: float = Field(ge=-180, le=180)
     region: Optional[str] = None
     country: Optional[str] = None
     orientation: Optional[str] = None
@@ -68,8 +69,8 @@ class RatingCreate(BaseModel):
     notes: Optional[str] = None
 
 class ForecastRequest(BaseModel):
-    latitude: float
-    longitude: float
+    latitude: float = Field(ge=-90, le=90)
+    longitude: float = Field(ge=-180, le=180)
     hourly: Optional[List[str]] = None
 
 # Utility functions
@@ -80,18 +81,63 @@ DEFAULT_HOURLY = [
     "swell_wave_period", "wind_wave_height", "wind_wave_direction", "wind_wave_period"
 ]
 
+MARINE_BASE = "https://marine-api.open-meteo.com/v1/marine"
+MARINE_FIELDS = {"wave_height", "wave_direction", "wave_period", "swell_wave_height",
+                 "swell_wave_direction", "swell_wave_period", "wind_wave_height",
+                 "wind_wave_direction", "wind_wave_period"}
+WEATHER_FIELDS = {"wind_speed_10m", "wind_direction_10m", "wind_gusts_10m",
+                  "temperature_2m", "precipitation"}
+
 async def fetch_open_meteo(lat: float, lon: float, hourly: Optional[List[str]] = None):
-    params = {
-        "latitude": lat,
-        "longitude": lon,
-        "hourly": ",".join(hourly or DEFAULT_HOURLY),
-        "timezone": "auto",
-    }
+    """Fetch weather and marine forecasts separately, then align by UTC timestamp."""
+    if not math.isfinite(lat) or not math.isfinite(lon) or not (-90 <= lat <= 90 and -180 <= lon <= 180):
+        raise HTTPException(422, detail="Coordinates out of range")
+    fields = list(dict.fromkeys(hourly or DEFAULT_HOURLY))
+    if not fields or set(fields) - (MARINE_FIELDS | WEATHER_FIELDS):
+        raise HTTPException(422, detail="Unsupported hourly variable")
     async with httpx.AsyncClient(timeout=20) as client:
-        r = await client.get(OPEN_METEO_BASE, params=params)
-        if r.status_code != 200:
-            raise HTTPException(status_code=502, detail=f"Open-Meteo error {r.status_code}")
-        return r.json()
+        async def fetch_group(base, selected):
+            params = {"latitude": lat, "longitude": lon, "hourly": ",".join(selected), "timezone": "GMT"}
+            if base == OPEN_METEO_BASE:
+                params["wind_speed_unit"] = "ms"
+            try:
+                response = await client.get(base, params=params)
+                response.raise_for_status()
+                data = response.json()
+                rows = data["hourly"]
+                times = rows["time"]
+                if not isinstance(times, list) or not times or len(times) != len(set(times)):
+                    raise ValueError("Invalid timestamps")
+                for value in times:
+                    datetime.fromisoformat(value)
+                for field in selected:
+                    if not isinstance(rows.get(field), list) or len(rows[field]) != len(times):
+                        raise ValueError("Misaligned forecast")
+                    if any(v is not None and (isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v)) for v in rows[field]):
+                        raise ValueError("Invalid observation")
+                return data
+            except (httpx.HTTPError, ValueError, KeyError, TypeError):
+                raise HTTPException(502, detail="Forecast provider unavailable or returned invalid data")
+        groups = [(MARINE_BASE, [f for f in fields if f in MARINE_FIELDS]),
+                  (OPEN_METEO_BASE, [f for f in fields if f in WEATHER_FIELDS])]
+        results = await asyncio.gather(*(fetch_group(base, selected) for base, selected in groups if selected))
+    # Union keeps missing provider hours explicitly null rather than shifting observations.
+    times = sorted(set(t for data in results for t in data["hourly"]["time"]))
+    merged = {"time": times}
+    units = {"time": "iso8601"}
+    for data in results:
+        rows = data["hourly"]
+        units.update(data.get("hourly_units", {}))
+        for field, values in rows.items():
+            if field == "time":
+                continue
+            lookup = dict(zip(rows["time"], values))
+            merged[field] = [lookup.get(t) for t in times]
+    return {"latitude": lat, "longitude": lon, "timezone": "GMT", "utc_offset_seconds": 0,
+            "hourly": merged, "hourly_units": units,
+            "source": "Open-Meteo weather and marine forecast models",
+            "fetched_at": datetime.now(timezone.utc).isoformat(),
+            "data_kind": "forecast", "attribution_url": "https://open-meteo.com/"}
 
 # Simple personalization/ML heuristic
 # Computes a surf score 0-100 based on conditions and user preferences
@@ -102,7 +148,9 @@ def circular_diff(a: float, b: float) -> float:
     return d
 
 def score_conditions(hour: Dict[str, Any], prefs: Dict[str, Any]) -> float:
-    wave = hour.get("swell_wave_height") or hour.get("wave_height")
+    wave = hour.get("swell_wave_height")
+    if wave is None:
+        wave = hour.get("wave_height")
     period = hour.get("swell_wave_period")
     wind = hour.get("wind_speed_10m")
     wind_dir = hour.get("wind_direction_10m")
@@ -254,8 +302,8 @@ async def list_ratings(user_id: Optional[str] = None, spot_id: Optional[str] = N
 # Forecast endpoints
 @app.get("/forecast/live")
 async def forecast_live(
-    latitude: float = Query(...),
-    longitude: float = Query(...),
+    latitude: float = Query(..., ge=-90, le=90),
+    longitude: float = Query(..., ge=-180, le=180),
     hourly: Optional[str] = Query(None, description="Comma-separated hourly variables"),
 ):
     try:

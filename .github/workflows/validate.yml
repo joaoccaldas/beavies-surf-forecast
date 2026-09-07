@@ -1,0 +1,14 @@
+name: Validate source contracts
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install fastapi==0.104.1 httpx==0.25.1 pydantic==2.5.0
+      - run: python -m unittest discover -v
