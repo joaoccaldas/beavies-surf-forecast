@@ -1,19 +1,26 @@
-IyBCZWF2aWVzIFN1cmYgRm9yZWNhc3QKCiMjIEJhbHRpYyBTZWEgU3VyZiBD
-b25kaXRpb25zCgpBIHN1cmYgZm9yZWNhc3RpbmcgYXBwbGljYXRpb24gc3Bl
-Y2lmaWNhbGx5IGRlc2lnbmVkIGZvciB0aGUgQmFsdGljIFNlYSByZWdpb24u
-IFByb3ZpZGVzIHJlYWwtdGltZSB3YXZlIGNvbmRpdGlvbnMsIHdlYXRoZXIg
-ZGF0YSwgYW5kIHByZWRpY3RpdmUgYW5hbHl0aWNzIHRvIGhlbHAgc3VyZmVy
-cyBtYWtlIGluZm9ybWVkIGRlY2lzaW9ucy4KCiMjIEtleSBGZWF0dXJlcwoj
-LiMgTGl2ZSBEYXRhIEZlZWQKLSBSZWFsLXRpbWUgc3VyZiBjb25kaXRpb25z
-IGZyb20gbXVsdGlwbGUgZGF0YSBzb3VyY2VzCi0gV2F2ZSBoZWlnaHQsIHBl
-cmlvZCwgYW5kIGRpcmVjdGlvbiBtb25pdG9yaW5nCi0gV2luZCBzcGVlZCwg
-ZGlyZWN0aW9uLCBhbmQgZ3VzdCBpbmZvcm1hdGlvbgojLiMgRm9yZWNhc3Rp
-bmcgTW9kZWwKLSBBZHZhbmNlZCB3ZWF0aGVyIHByZWRpY3Rpb24gYWxnb3Jp
-dGhtcwotIE11bHRpLWRheSBzdXJmIGZvcmVjYXN0IHdpdGggaG91cmx5IGdy
-YW51bGFyaXR5Ci0gTWFjaGluZSBsZWFybmluZy1wb3dlcmVkIHdhdmUgY29u
-ZGl0aW9uIHByZWRpY3Rpb25zCgojIyBUZWNobm9sb2d5ClB5dGhvbiBiYWNr
-ZW5kIHdpdGggcmVhbC10aW1lIGRhdGEgcHJvY2Vzc2luZy4gRGVwbG95ZWQg
-b24gUmVuZGVyIChiYWNrZW5kKSBhbmQgR2l0SHViIFBhZ2VzIChmcm9udGVu
-ZCkuCgojIyBTdGF0dXMKQWN0aXZlIGRldmVsb3BtZW50LiBVc2VkIGZvciBw
-ZXJzb25hbCBzdXJmIHRyaXBzIGluIHRoZSBCYWx0aWMuCgoqIkJ1aWx0IGJ5
-IEpryZv28IENhbGRhcyB8IGpvYW9jY2FsZGFzQGdtYWlsLmNvbSIqKgo=
+# Beavies Surf Forecast
+
+**Baltic Sea surf conditions and forecasting.** Real-time wave conditions, weather data, and predictive analytics to help surfers in the Baltic region decide when and where to paddle out.
+
+## Features
+
+### Live data feed
+- Real-time surf conditions from multiple sources
+- Wave height, period, and direction
+- Wind speed, direction, and gusts
+
+### Forecasting model
+- Multi-day surf forecast with hourly granularity
+- Weather-driven, ML-assisted wave condition predictions
+
+## Technology
+
+Python backend with real-time data processing. Deployed with the backend on Render and the frontend on GitHub Pages.
+
+## Status
+
+Active — used to plan personal surf trips on the Baltic.
+
+---
+
+Built by [João Caldas](https://github.com/joaoccaldas).
