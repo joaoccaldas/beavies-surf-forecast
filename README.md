@@ -1,19 +1,30 @@
-IyBCZWF2aWVzIFN1cmYgRm9yZWNhc3QKCiMjIEJhbHRpYyBTZWEgU3VyZiBD
-b25kaXRpb25zCgpBIHN1cmYgZm9yZWNhc3RpbmcgYXBwbGljYXRpb24gc3Bl
-Y2lmaWNhbGx5IGRlc2lnbmVkIGZvciB0aGUgQmFsdGljIFNlYSByZWdpb24u
-IFByb3ZpZGVzIHJlYWwtdGltZSB3YXZlIGNvbmRpdGlvbnMsIHdlYXRoZXIg
-ZGF0YSwgYW5kIHByZWRpY3RpdmUgYW5hbHl0aWNzIHRvIGhlbHAgc3VyZmVy
-cyBtYWtlIGluZm9ybWVkIGRlY2lzaW9ucy4KCiMjIEtleSBGZWF0dXJlcwoj
-LiMgTGl2ZSBEYXRhIEZlZWQKLSBSZWFsLXRpbWUgc3VyZiBjb25kaXRpb25z
-IGZyb20gbXVsdGlwbGUgZGF0YSBzb3VyY2VzCi0gV2F2ZSBoZWlnaHQsIHBl
-cmlvZCwgYW5kIGRpcmVjdGlvbiBtb25pdG9yaW5nCi0gV2luZCBzcGVlZCwg
-ZGlyZWN0aW9uLCBhbmQgZ3VzdCBpbmZvcm1hdGlvbgojLiMgRm9yZWNhc3Rp
-bmcgTW9kZWwKLSBBZHZhbmNlZCB3ZWF0aGVyIHByZWRpY3Rpb24gYWxnb3Jp
-dGhtcwotIE11bHRpLWRheSBzdXJmIGZvcmVjYXN0IHdpdGggaG91cmx5IGdy
-YW51bGFyaXR5Ci0gTWFjaGluZSBsZWFybmluZy1wb3dlcmVkIHdhdmUgY29u
-ZGl0aW9uIHByZWRpY3Rpb25zCgojIyBUZWNobm9sb2d5ClB5dGhvbiBiYWNr
-ZW5kIHdpdGggcmVhbC10aW1lIGRhdGEgcHJvY2Vzc2luZy4gRGVwbG95ZWQg
-b24gUmVuZGVyIChiYWNrZW5kKSBhbmQgR2l0SHViIFBhZ2VzIChmcm9udGVu
-ZCkuCgojIyBTdGF0dXMKQWN0aXZlIGRldmVsb3BtZW50LiBVc2VkIGZvciBw
-ZXJzb25hbCBzdXJmIHRyaXBzIGluIHRoZSBCYWx0aWMuCgoqIkJ1aWx0IGJ5
-IEpryZv28IENhbGRhcyB8IGpvYW9jY2FsZGFzQGdtYWlsLmNvbSIqKgo=
+# Beavies Surf Forecast
+
+## Baltic Sea Surf Conditions
+
+A surf forecasting application specifically designed for the Baltic Sea region. Provides real-time wave conditions, weather data, and predictive analytics to help surfers make informed decisions.
+
+## Key Features
+#.# Live Data Feed
+- Real-time surf conditions from multiple data sources
+- Wave height, period, and direction monitoring
+- Wind speed, direction, and gust information
+#.# Forecasting Model
+- Advanced weather prediction algorithms
+- Multi-day surf forecast with hourly granularity
+- Machine learning-powered wave condition predictions
+
+## Technology
+Python backend with real-time data processing. Deployed on Render (backend) and GitHub Pages (frontend).
+
+## Status
+Active development. Used for personal surf trips in the Baltic.
+
+*"Built by JkÉöð±Ìð©½½±Íµ¥°¹½´¨¨(
+
+## Project context
+
+This is a personal, self-directed learning project by João Caldas. I learn by building real projects, comparing approaches, debugging failures, and documenting what I discover.
+
+AI tools are used extensively during research, design, coding, debugging, testing, and documentation as part of that learning process. AI-generated suggestions are treated as inputs to review, not proof of correctness. Important behavior, claims, security boundaries, and data handling should be tested and documented.
+
